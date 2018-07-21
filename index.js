@@ -11,7 +11,20 @@ const duo = {
       }
     })
       .then(response => {
-        const userData = response.data.language_data.de.points_ranking_data;
+        const potentialLanguages = response.data.languages;
+        let userData;
+        
+
+        let i=0;
+        while (i<potentialLanguages.length) {
+          if (response.data.language_data[potentialLanguages[i].language]) {
+            userData = response.data.language_data[potentialLanguages[i].language]['points_ranking_data'];
+            break;
+          }
+          i++;
+        }
+      
+
 
         userData.forEach(item => {
           switch(item.username) {
@@ -74,6 +87,10 @@ const duo = {
 };
 
 
+// Initialize App and begin initial network request
 duo.fetchUserInfo();
+
+// Set Interval to re-query data every 90 seconds
+setInterval(duo.fetchUserInfo, 90000);
 
 
