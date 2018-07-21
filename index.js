@@ -34,10 +34,13 @@ const duo = {
           case 'sousmarins':
             return item.points_data.total-=650;
           
-
           default:
             return item.points_data.total = item.points_data.total;
           }
+        });
+
+        userData.sort((a,b) => {
+          return Number(a.points_data.total) < Number(b.points_data.total);
         });
 
         duo.writeToDom(userData);
@@ -45,15 +48,15 @@ const duo = {
       });
   },
 
-  userBlockHtml: (name, points,avatar) => { 
+  userBlockHtml: (name, points,avatar,index) => { 
     return `
-    <div class='user-block-container col-sm-5'>
+    <div class="user-block-container col-sm-5 ${index===0 ? 'leader' : ''}">
       <div class='name'>
         ${name}
         <img src='https:${avatar}/medium'>
       </div>
       <div class='points'>
-        Points this Round: ${points}
+        Points this Round: <div class='points-number'>${points}</div>
       </div>
     </div>
     `; 
@@ -61,8 +64,8 @@ const duo = {
 
   writeToDom: arrOfUsers => {
     let htmlString = '';
-    arrOfUsers.forEach(item => {
-      htmlString+= duo.userBlockHtml(item.username, item.points_data.total,item.avatar);
+    arrOfUsers.forEach((item,index) => {
+      htmlString+= duo.userBlockHtml(item.username, item.points_data.total,item.avatar,index);
     });
     $('.duo-container').html(htmlString);
   }

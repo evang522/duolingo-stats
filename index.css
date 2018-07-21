@@ -55,8 +55,18 @@ header {
   margin-top:.8rem;
 }
 
+.leader {
+  background-color:#FFC51D;
+}
 
-
+.points-number {
+  background-color:rgb(155, 27, 27);
+  width:3rem;
+  margin:0 auto;
+  color:white;
+  border-radius:2rem;
+  margin-top:.4rem;
+}
 
 /* SPINNER  */
 
