@@ -53,7 +53,9 @@ const duo = {
     <div class="user-block-container col-sm-5 ${index===0 ? 'leader' : ''}">
       <div class='name'>
         ${name}
+        <a href='https://duolingo.com/${name}'>
         <img src='https:${avatar}/medium'>
+        </a>
       </div>
       <div class='points'>
         Points this Round: <div class='points-number'>${points}</div>
