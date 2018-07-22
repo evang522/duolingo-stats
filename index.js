@@ -88,7 +88,7 @@ const duo = {
     $('.duo-container').html(htmlString);
   },
   writeTime: () => {
-    $('.time-left').text(` Competition ends ${moment(new Date('8/20/18 17:00').getTime()).fromNow()}...`);
+    $('.time-left').text(` Competition ends ${moment(new Date('8/20/18 17:00').getTime()).fromNow()}!`);
   }
 };
 
