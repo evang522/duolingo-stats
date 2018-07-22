@@ -4,6 +4,8 @@
 const duo = {
 
   fetchUserInfo: () => {  
+
+    $('.loader-container').css('display','block');
     axios({
       'url':'https://cors-anywhere.herokuapp.com/https://www.duolingo.com/users/evang522',
       'headers': {
@@ -61,6 +63,11 @@ const duo = {
 
         duo.writeToDom(userData);
         $('.loader-container').css('display','none');
+      })
+      .catch(err => {
+        console.log(err);
+        $('.loader-container').css('display','none');
+        $('.duo-container').html(duo.errorHtml);
       });
   },
 
@@ -79,6 +86,7 @@ const duo = {
     </div>
     `; 
   },
+  errorHtml: '<div class=\'error-box\'> <h2> Error </h2> <h5><u> I had one job.</u> </h5> But really more likely the API isn\'t working. Sorry!  </p> <br> <button onclick="duo.fetchUserInfo()" class=\'retry-button btn btn-primary\'>Retry?</button></div>',
 
   writeToDom: arrOfUsers => {
     let htmlString = '';
@@ -94,8 +102,19 @@ const duo = {
 
 
 // Initialize App and begin initial network request
-duo.fetchUserInfo();
-duo.writeTime();
+
+try {
+  duo.fetchUserInfo();
+  duo.writeTime();
+} catch(e) {
+  console.log('The following Error occured: ', e);
+
+  // Display Error Message
+  document.querySelector('.duo-container').innerHTML = duo.errorHtml;
+  document.querySelector('.error-box').style.cssText='margin:auto';
+  document.querySelector('.loader-container').style.cssText='display:none';
+  
+}
 
 // Set Interval to re-query data every 90 seconds
 setInterval(duo.fetchUserInfo, 90000);

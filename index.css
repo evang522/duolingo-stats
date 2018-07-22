@@ -90,6 +90,30 @@ header {
   margin-top:.4rem;
 }
 
+@keyframes jiggle {
+  0% {margin-top:1rem;}
+  50% {margin-top:2rem;}
+  75% {margin-top:2.5rem;}
+  100% {margin-top:3rem;}
+}
+
+.error-box {
+  background-color:rgb(174, 33, 33);
+  padding:1rem;
+  text-align:center;
+  color:white;
+  border-radius:1rem;
+  box-shadow:1px 8px 23px 8px rgba(0, 0, 0, 0.313); 
+  width:80%;
+  margin-top:3rem;
+  animation:jiggle .2s linear;
+}
+
+.retry-button {
+  box-shadow: 3px 3px 8px 1px rgba(0, 0, 0, 0.415);
+}
+
+
 /* SPINNER  */
 
 .loader-container {
