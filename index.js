@@ -1,5 +1,5 @@
 'use strict';
-/*global axios, $ */
+/*global axios, moment $ */
 
 const duo = {
 
@@ -46,6 +46,9 @@ const duo = {
           
           case 'sousmarins':
             return item.points_data.total-=650;
+
+          case 'TamiGarret':
+            return item.points_data.total-=210;
           
           default:
             return item.points_data.total = item.points_data.total;
@@ -83,12 +86,16 @@ const duo = {
       htmlString+= duo.userBlockHtml(item.username, item.points_data.total,item.avatar,index);
     });
     $('.duo-container').html(htmlString);
+  },
+  writeTime: () => {
+    $('.time-left').text(` Competition ends ${moment(new Date('8/20/18 17:00').getTime()).fromNow()}...`);
   }
 };
 
 
 // Initialize App and begin initial network request
 duo.fetchUserInfo();
+duo.writeTime();
 
 // Set Interval to re-query data every 90 seconds
 setInterval(duo.fetchUserInfo, 90000);

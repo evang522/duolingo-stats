@@ -61,6 +61,11 @@ header {
   background-color:#FFC51D;
 }
 
+.time-left {
+  text-align:center;
+  color:white;
+}
+
 .points-number {
   background-color:rgb(155, 27, 27);
   width:3rem;
