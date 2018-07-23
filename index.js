@@ -3,6 +3,7 @@
 
 const duo = {
 
+  users:[],
   //Counts the amount of API calls made in one session
   call_count: 0,
   
@@ -34,27 +35,31 @@ const duo = {
 
         // Loop through array of users and subtract Initial score (that the user had starting the competition) from their total score
         userData.forEach(item => {
-          switch(item.username) {
+          switch(item.id) {
 
-          case 'evang522':
+          //evang522
+          case 52146611:
             return item.points_data.total-= 10046; 
-          
-          case 'JoedKend':
+          //JoedKend
+          case 6426706:
             return item.points_data.total-= 3384; 
-          
-          case 'Clessie':
+          //Clessie
+          case 51780307:
             return item.points_data.total-= 2564;
-
-          case 'RebekahStillwell':
+          //RebekahStillwell
+          case 407853977:
             return item.points_data.total-= 600;
-          
-          case 'JodiGarret':
+          //JodiGarret
+          case 402249718:
             return item.points_data.total-= 950;
-          
-          case 'sousmarins':
+          //sousmarins
+          case 223811089:
             return item.points_data.total-=650;
-
-          case 'TamiGarret':
+          //TamiGarret
+          case 405763753:
+            return item.points_data.total-=210;
+          //LynnStillwell
+          case 408117925:
             return item.points_data.total-=210;
           
           default:
@@ -67,8 +72,10 @@ const duo = {
           return Number(a.points_data.total) < Number(b.points_data.total);
         });
 
+        duo.users = userData;
+
         // Write HTML to DOM
-        duo.writeToDom(userData);
+        duo.writeToDom(duo.users);
         // Remove Loader
         $('.loader-container').css('display','none');
         duo.call_count++;
@@ -77,6 +84,7 @@ const duo = {
         console.log(err);
         $('.loader-container').css('display','none');
         $('.duo-container').html(duo.errorHtml);
+        duo.call_count = 0;
       });
   },
 
