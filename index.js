@@ -3,9 +3,15 @@
 
 const duo = {
 
+  //Counts the amount of API calls made in one session
+  call_count: 0,
+  
+  // Fetches User Info from API, loops through, writes to DOM
   fetchUserInfo: () => {  
 
-    $('.loader-container').css('display','block');
+    if (duo.call_count === 0) {
+      $('.loader-container').css('display','block');
+    }
     axios({
       'url':'https://cors-anywhere.herokuapp.com/https://www.duolingo.com/users/evang522',
       'headers': {
@@ -25,9 +31,8 @@ const duo = {
           }
           i++;
         }
-      
 
-
+        // Loop through array of users and subtract Initial score (that the user had starting the competition) from their total score
         userData.forEach(item => {
           switch(item.username) {
 
@@ -57,12 +62,16 @@ const duo = {
           }
         });
 
+        // Sort by highest score
         userData.sort((a,b) => {
           return Number(a.points_data.total) < Number(b.points_data.total);
         });
 
+        // Write HTML to DOM
         duo.writeToDom(userData);
+        // Remove Loader
         $('.loader-container').css('display','none');
+        duo.call_count++;
       })
       .catch(err => {
         console.log(err);
