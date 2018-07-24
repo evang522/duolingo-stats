@@ -74,6 +74,8 @@ const duo = {
 
         duo.users = userData;
 
+        duo.writeToDom(duo.users,true);
+        $('.loader-container').css('display','none');
         return new Promise((resolve,reject) => {
           let counter = 0;
 
@@ -94,7 +96,7 @@ const duo = {
                 }
               })
               .catch(err => {
-                console.log(err);
+                reject(err);
               });
 
           });
@@ -103,9 +105,9 @@ const duo = {
           .then(() => {
 
             // Write HTML to DOM
-            duo.writeToDom(duo.users);
+            duo.writeToDom(duo.users,false);
             // Remove Loader
-            $('.loader-container').css('display','none');
+            // $('.loader-container').css('display','none');
             duo.call_count++;
           });
 
@@ -118,7 +120,7 @@ const duo = {
       });
   },
 
-  userBlockHtml: (name,points,avatar,streak, learningLanguage, index) => { 
+  userBlockHtml: (name,points,avatar,streak='-', learningLanguage='-', index,loading) => { 
     return `
     <div class="user-block-container col-sm-5 ${index===0 ? 'leader' : ''}">
       <div class='name'>
@@ -133,13 +135,13 @@ const duo = {
           </div>
           <div class='streak'>
             Streak:
-            <div class='streak-bubble'>
+            <div class='streak-bubble ${loading ? 'pulse':''}'>
             ${streak} days
             </div>
           </div>
           <div class='learning'>
           Learning:
-          <div class='learning-bubble'>
+          <div class='learning-bubble ${loading ? 'pulse':''}'>
           ${learningLanguage}
           </div>
           </div>
@@ -149,10 +151,10 @@ const duo = {
   },
   errorHtml: '<div class=\'error-box\'> <h2> Error </h2> <h5><u> I had one job.</u> </h5> But really more likely the API isn\'t working. Sorry!  </p> <br> <button onclick="duo.fetchUserInfo()" class=\'retry-button btn btn-primary\'>Retry?</button></div>',
 
-  writeToDom: arrOfUsers => {
+  writeToDom: (arrOfUsers,loading) => {
     let htmlString = '';
     arrOfUsers.forEach((item,index) => {
-      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index);
+      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index, loading);
     });
     $('.duo-container').html(htmlString);
   },
