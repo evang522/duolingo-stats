@@ -74,11 +74,41 @@ const duo = {
 
         duo.users = userData;
 
-        // Write HTML to DOM
-        duo.writeToDom(duo.users);
-        // Remove Loader
-        $('.loader-container').css('display','none');
-        duo.call_count++;
+        return new Promise((resolve,reject) => {
+          let counter = 0;
+
+          duo.users.forEach(user => {
+            axios({
+              'url':`https://cors-anywhere.herokuapp.com/https://www.duolingo.com/2017-06-30/users/${user.id}?fields=name,streak,learningLanguage&_=1532406936067`,
+              'method':'GET',
+              'headers': {
+                'x-requested-with':'friendface'
+              }
+            })
+              .then(response => {
+                user.streak = response.data.streak;
+                user.learningLanguage = response.data.learningLanguage;
+                counter++;
+                if (counter === duo.users.length) {
+                  return resolve();
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              });
+
+          });
+
+        })
+          .then(() => {
+
+            // Write HTML to DOM
+            duo.writeToDom(duo.users);
+            // Remove Loader
+            $('.loader-container').css('display','none');
+            duo.call_count++;
+          });
+
       })
       .catch(err => {
         console.log(err);
@@ -88,7 +118,7 @@ const duo = {
       });
   },
 
-  userBlockHtml: (name, points,avatar,index) => { 
+  userBlockHtml: (name,points,avatar,streak, learningLanguage, index) => { 
     return `
     <div class="user-block-container col-sm-5 ${index===0 ? 'leader' : ''}">
       <div class='name'>
@@ -96,10 +126,24 @@ const duo = {
         <a href='https://duolingo.com/${name}'>
         <img src='https:${avatar}/medium'>
         </a>
-      </div>
-      <div class='points'>
-        Points this Round: <div class='points-number'>${points}</div>
-      </div>
+        </div>
+        <div class='info-container'>
+          <div class='points'>
+            Points this Round: <div class='points-number'>${points}</div>
+          </div>
+          <div class='streak'>
+            Streak:
+            <div class='streak-bubble'>
+            ${streak} days
+            </div>
+          </div>
+          <div class='learning'>
+          Learning:
+          <div class='learning-bubble'>
+          ${learningLanguage}
+          </div>
+          </div>
+        </div>
     </div>
     `; 
   },
@@ -108,7 +152,7 @@ const duo = {
   writeToDom: arrOfUsers => {
     let htmlString = '';
     arrOfUsers.forEach((item,index) => {
-      htmlString+= duo.userBlockHtml(item.username, item.points_data.total,item.avatar,index);
+      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index);
     });
     $('.duo-container').html(htmlString);
   },
