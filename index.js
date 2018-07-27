@@ -13,21 +13,21 @@ const duo = {
     if (duo.call_count === 0) {
       $('.loader-container').css('display','block');
     }
-    axios({
+    $.getJSON({
       'url':'https://cors-anywhere.herokuapp.com/https://www.duolingo.com/users/evang522',
       'headers': {
         'x-requested-with':'friendface'
       }
     })
       .then(response => {
-        const potentialLanguages = response.data.languages;
+        const potentialLanguages = response.languages;
         let userData;
         
 
         let i=0;
         while (i<potentialLanguages.length) {
-          if (response.data.language_data[potentialLanguages[i].language]) {
-            userData = response.data.language_data[potentialLanguages[i].language]['points_ranking_data'];
+          if (response.language_data[potentialLanguages[i].language]) {
+            userData = response.language_data[potentialLanguages[i].language]['points_ranking_data'];
             break;
           }
           i++;
@@ -80,7 +80,7 @@ const duo = {
           let counter = 0;
 
           duo.users.forEach(user => {
-            axios({
+            $.getJSON({
               'url':`https://cors-anywhere.herokuapp.com/https://www.duolingo.com/2017-06-30/users/${user.id}?fields=name,streak,learningLanguage&_=1532406936067`,
               'method':'GET',
               'headers': {
@@ -88,8 +88,8 @@ const duo = {
               }
             })
               .then(response => {
-                user.streak = response.data.streak;
-                user.learningLanguage = response.data.learningLanguage;
+                user.streak = response.streak;
+                user.learningLanguage = response.learningLanguage;
                 counter++;
                 if (counter === duo.users.length) {
                   return resolve();
