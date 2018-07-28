@@ -76,40 +76,45 @@ const duo = {
 
         duo.writeToDom(duo.users,true);
         $('.loader-container').css('display','none');
-        return new Promise((resolve,reject) => {
-          let counter = 0;
+       
+       
+        if (duo.call_count === 0) {
 
-          duo.users.forEach(user => {
-            axios({
-              'url':`https://cors-anywhere.herokuapp.com/https://www.duolingo.com/2017-06-30/users/${user.id}?fields=name,streak,learningLanguage&_=1532406936067`,
-              'method':'GET',
-              'headers': {
-                'x-requested-with':'friendface'
-              }
-            })
-              .then(response => {
-                user.streak = response.data.streak;
-                user.learningLanguage = response.data.learningLanguage;
-                counter++;
-                if (counter === duo.users.length) {
-                  return resolve();
+          return new Promise((resolve,reject) => {
+            let counter = 0;
+
+            duo.users.forEach(user => {
+              axios({
+                'url':`https://cors-anywhere.herokuapp.com/https://www.duolingo.com/2017-06-30/users/${user.id}?fields=name,streak,learningLanguage&_=1532406936067`,
+                'method':'GET',
+                'headers': {
+                  'x-requested-with':'friendface'
                 }
               })
-              .catch(err => {
-                reject(err);
-              });
+                .then(response => {
+                  user.streak = response.data.streak;
+                  user.learningLanguage = response.data.learningLanguage;
+                  counter++;
+                  if (counter === duo.users.length) {
+                    return resolve();
+                  }
+                })
+                .catch(err => {
+                  reject(err);
+                });
 
-          });
+            });
 
-        })
-          .then(() => {
+          })
+            .then(() => {
 
             // Write HTML to DOM
-            duo.writeToDom(duo.users,false);
-            // Remove Loader
-            // $('.loader-container').css('display','none');
-            duo.call_count++;
-          });
+              duo.writeToDom(duo.users,false);
+              // Remove Loader
+              // $('.loader-container').css('display','none');
+              duo.call_count++;
+            });
+        }
 
       })
       .catch(err => {
