@@ -72,9 +72,22 @@ const duo = {
           return Number(a.points_data.total) < Number(b.points_data.total);
         });
 
-        duo.users = userData;
-
-        duo.writeToDom(duo.users,true);
+        // If the user array is populated, don't entirely replace, but update point information based on new API results
+        if (duo.users.length) {
+          duo.users.forEach(user => {
+            user.points_data.total = userData.find(item => item.id === user.id).points_data.total;
+          });
+        } else {
+          duo.users = userData;
+        }
+        
+        // If this is the first call, set the user streak/language bubbles to loading
+        // Otherwise, render them as not loading 
+        if (duo.call_count === 0) {
+          duo.writeToDom(duo.users,true);
+        } else {
+          duo.writeToDom(duo.users,false);
+        }
         $('.loader-container').css('display','none');
        
        
@@ -111,7 +124,6 @@ const duo = {
             // Write HTML to DOM
               duo.writeToDom(duo.users,false);
               // Remove Loader
-              // $('.loader-container').css('display','none');
               duo.call_count++;
             });
         }
@@ -125,12 +137,12 @@ const duo = {
       });
   },
 
-  userBlockHtml: (name,points,avatar,streak='-', learningLanguage='-', index,loading) => { 
+  userBlockHtml: (name, points, avatar, streak='-', learningLanguage='-', index, username, loading) => { 
     return `
     <div class="user-block-container col-sm-5 ${index===0 ? 'leader' : ''}">
       <div class='name'>
         ${name}
-        <a href='https://duolingo.com/${name}'>
+        <a href='https://duolingo.com/${username}' target="_blank">
         <img src='https:${avatar}/medium'>
         </a>
         </div>
@@ -159,7 +171,7 @@ const duo = {
   writeToDom: (arrOfUsers,loading) => {
     let htmlString = '';
     arrOfUsers.forEach((item,index) => {
-      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index, loading);
+      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index, item.username, loading);
     });
     $('.duo-container').html(htmlString);
   },
