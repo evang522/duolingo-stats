@@ -7,7 +7,7 @@ const duo = {
   //Counts the amount of API calls made in one session
   call_count: 0,
 
-  previousUserInfo:JSON.parse(localStorage.getItem('userInfo')),
+  previousUserInfo:JSON.parse(localStorage.getItem('userInfo')) || null,
   
   // Fetches User Info from API, loops through, writes to DOM
   fetchUserInfo: () => {  
@@ -71,7 +71,7 @@ const duo = {
 
         // Calculate Gains
         userData.forEach(user => {
-          user.gains = user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total;
+          user.gains = duo.previousUserInfo ? user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total: '-';
         });
 
         // Sort by highest score
