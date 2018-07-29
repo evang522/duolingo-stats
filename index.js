@@ -181,7 +181,7 @@ const duo = {
           </div>
           <div class='gains' alt='The Amount of points the user has earned since you last checked with this browser.'>
           Gains:
-            <div class='gains-bubble'>
+            <div class='gains-bubble  ${loading ? 'pulse':''}'>
             ${gains}
             </div>
           </div>
