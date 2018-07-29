@@ -71,10 +71,14 @@ header {
 
 .info-container {
   display:flex;
-  flex-direction:row;
   margin-top:.8rem;
   font-size:1rem;
   justify-content:center;
+  flex-wrap:wrap;
+}
+
+.info-container > div {
+  margin:.5rem;
 }
 
 
@@ -86,7 +90,7 @@ header {
 .streak-bubble {
   background-color:#2BA9E5;
   border:.5px solid rgba(0, 0, 0, 0.408);
-  width:5rem;
+  width:125%;
   margin:0 auto;
   color:white;
   border-radius:2rem;
@@ -158,6 +162,13 @@ header {
 
 .retry-button {
   box-shadow: 3px 3px 8px 1px rgba(0, 0, 0, 0.415);
+}
+
+.gains-bubble {
+  background-color:rgb(20, 81, 20);
+  margin-top:.4rem;
+  border-radius:2rem;
+  color:white;
 }
 
 @keyframes pulse {

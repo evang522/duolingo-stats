@@ -6,6 +6,8 @@ const duo = {
   users:[],
   //Counts the amount of API calls made in one session
   call_count: 0,
+
+  previousUserInfo:JSON.parse(localStorage.getItem('userInfo')),
   
   // Fetches User Info from API, loops through, writes to DOM
   fetchUserInfo: () => {  
@@ -67,6 +69,11 @@ const duo = {
           }
         });
 
+        // Calculate Gains
+        userData.forEach(user => {
+          user.gains = user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total;
+        });
+
         // Sort by highest score
         userData.sort((a,b) => {
           return Number(a.points_data.total) < Number(b.points_data.total);
@@ -75,10 +82,20 @@ const duo = {
         // If the user array is populated, don't entirely replace, but update point information based on new API results
         if (duo.users.length) {
           duo.users.forEach(user => {
-            user.points_data.total = userData.find(item => item.id === user.id).points_data.total;
+            let userDataInstance = userData.find(item => item.id === user.id);
+            user.points_data.total = userDataInstance.points_data.total;
+            user.gains = userDataInstance.gains;
           });
+
+          localStorage.setItem('userInfo', JSON.stringify(duo.users));
+          duo.previousUserInfo = duo.users;
+
+          
         } else {
           duo.users = userData;
+          localStorage.setItem('userInfo', JSON.stringify(duo.users));
+          duo.previousUserInfo = duo.users;
+
         }
         
         // If this is the first call, set the user streak/language bubbles to loading
@@ -137,7 +154,7 @@ const duo = {
       });
   },
 
-  userBlockHtml: (name, points, avatar, streak='-', learningLanguage='-', index, username, loading) => { 
+  userBlockHtml: (name, points, avatar, streak='-', learningLanguage='-', index, username, loading, gains) => { 
     return `
     <div class="user-block-container col-sm-5 ${index===0 ? 'leader' : ''}">
       <div class='name'>
@@ -148,7 +165,7 @@ const duo = {
         </div>
         <div class='info-container'>
           <div class='points'>
-            Points this Round: <div class='points-number'>${points}</div>
+            Points: <div class='points-number'>${points}</div>
           </div>
           <div class='streak'>
             Streak:
@@ -157,10 +174,16 @@ const duo = {
             </div>
           </div>
           <div class='learning'>
-          Learning:
-          <div class='learning-bubble ${loading ? 'pulse':''}'>
-          ${learningLanguage}
+          Learns:
+            <div class='learning-bubble ${loading ? 'pulse':''}'>
+            ${learningLanguage}
+            </div>
           </div>
+          <div class='gains' alt='The Amount of points the user has earned since you last checked with this browser.'>
+          Gains:
+            <div class='gains-bubble'>
+            ${gains}
+            </div>
           </div>
         </div>
     </div>
@@ -171,7 +194,7 @@ const duo = {
   writeToDom: (arrOfUsers,loading) => {
     let htmlString = '';
     arrOfUsers.forEach((item,index) => {
-      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index, item.username, loading);
+      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index, item.username, loading, item.gains);
     });
     $('.duo-container').html(htmlString);
   },
