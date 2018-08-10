@@ -74,7 +74,7 @@ const duo = {
 
         // Calculate Gains
         userData.forEach(user => {
-          user.gains = duo.previousUserInfo.find(prevUserRecord => prevUserRecord.id === user.id ) ? user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total: '-';
+          user.gains = duo.previousUserInfo && duo.previousUserInfo.find(prevUserRecord => prevUserRecord.id === user.id ) ? user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total: '-';
         });
 
         // Sort by highest score
