@@ -63,7 +63,10 @@ const duo = {
           //LynnStillwell
           case 408117925:
             return item.points_data.total-=210;
-          
+          //CrstalHankin
+          case 414117383: 
+            return item.points_data.total-=27;
+
           default:
             return item.points_data.total = item.points_data.total;
           }
@@ -71,7 +74,7 @@ const duo = {
 
         // Calculate Gains
         userData.forEach(user => {
-          user.gains = duo.previousUserInfo ? user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total: '-';
+          user.gains = duo.previousUserInfo.find(prevUserRecord => prevUserRecord.id === user.id ) ? user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total: '-';
         });
 
         // Sort by highest score
@@ -194,7 +197,7 @@ const duo = {
   writeToDom: (arrOfUsers,loading) => {
     let htmlString = '';
     arrOfUsers.forEach((item,index) => {
-      htmlString+= duo.userBlockHtml(item.fullname||item.username, item.points_data.total,item.avatar, item.streak, item.learningLanguage, index, item.username, loading, item.gains);
+      htmlString+= duo.userBlockHtml((item.fullname && item.fullname.length < 23 ? item.fullname : item.username), item.points_data.total,item.avatar, item.streak, item.learningLanguage, index, item.username, loading, item.gains);
     });
     $('.duo-container').html(htmlString);
   },

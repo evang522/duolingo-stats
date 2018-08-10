@@ -5,6 +5,7 @@
   margin:.5rem;
   box-shadow:5px 3px 3px rgba(0, 0, 0, 0.404);
   text-align:center;
+  box-sizing:border-box;
 }
 
 
@@ -64,11 +65,6 @@ header {
   font-size:200%;
 }
 
-.points {
-
-}
-
-
 .info-container {
   display:flex;
   margin-top:.8rem;
@@ -82,11 +78,6 @@ header {
 }
 
 
-
-.streak{
-/* margin-left:1rem; */
-}
-
 .streak-bubble {
   background-color:#2BA9E5;
   border:.5px solid rgba(0, 0, 0, 0.408);
@@ -98,7 +89,10 @@ header {
 }
 
 .leader {
-  background-color:#FFC51D;
+  /* background-color:#FFC51D; */
+  box-sizing:border-box;
+  border:7px solid #FFC51D;
+
 }
 
 .time-left {
