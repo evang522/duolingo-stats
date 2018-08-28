@@ -1,6 +1,53 @@
 'use strict';
 /*global axios, moment $ */
 
+
+const userInfo = [
+  {
+    'id': 52146611,
+    'name': 'Evan Garrett',
+    'startingScore': 17777
+  },
+  {
+    'id': 51780307,
+    'username': 'Clessie',
+    'startingScore': 6062
+  },
+  {
+    'id': 407853977,
+    'username': 'Bekah Stillwell',
+    'startingScore':10270
+  },
+  {
+    'id': 402249718,
+    'username': 'Jodi',
+    'startingScore': 2730
+  },
+  {
+    'id': 223811089,
+    'username': 'Becca Dawson',
+    'startingScore': 650
+  },
+  {
+    'id': 405763753,
+    'username': 'Tami Garrett',
+    'startingScore': 630
+  },
+  {
+    'id': 408117925,
+    'username': 'Lynn Stillwell',
+    'startingScore': 2590
+  },
+  {
+    'id': 414117383,
+    'username': 'Crystal Hankin',
+    'startingScore': 539
+  }
+];
+
+
+
+
 const duo = {
 
   users:[],
@@ -8,7 +55,18 @@ const duo = {
   call_count: 0,
 
   previousUserInfo:JSON.parse(localStorage.getItem('userInfo')) || null,
+
+
   
+  levelstartingPoints: userArr => {
+    userArr.forEach(user => {
+      const currentUser = userInfo.find(_user => _user.id === user.id);
+      if (currentUser) {
+        return user.points_data.total-= currentUser.startingScore;
+      }
+    });
+  },
+
   // Fetches User Info from API, loops through, writes to DOM
   fetchUserInfo: () => {  
 
@@ -35,42 +93,7 @@ const duo = {
           i++;
         }
 
-        // Loop through array of users and subtract Initial score (that the user had starting the competition) from their total score
-        userData.forEach(item => {
-          switch(item.id) {
-
-          //evang522
-          case 52146611:
-            return item.points_data.total-= 10046; 
-          //JoedKend
-          case 6426706:
-            return item.points_data.total-= 3384; 
-          //Clessie
-          case 51780307:
-            return item.points_data.total-= 2564;
-          //RebekahStillwell
-          case 407853977:
-            return item.points_data.total-= 600;
-          //JodiGarret
-          case 402249718:
-            return item.points_data.total-= 950;
-          //sousmarins
-          case 223811089:
-            return item.points_data.total-=650;
-          //TamiGarret
-          case 405763753:
-            return item.points_data.total-=210;
-          //LynnStillwell
-          case 408117925:
-            return item.points_data.total-=210;
-          //CrstalHankin
-          case 414117383: 
-            return item.points_data.total-=27;
-
-          default:
-            return item.points_data.total = item.points_data.total;
-          }
-        });
+        duo.levelstartingPoints(userData);
 
         // Calculate Gains
         userData.forEach(user => {
@@ -106,6 +129,9 @@ const duo = {
         if (duo.call_count === 0) {
           duo.writeToDom(duo.users,true);
         } else {
+          duo.users.sort((a, b) => {
+            return Number(a.points_data.total) < Number(b.points_data.total);
+          });
           duo.writeToDom(duo.users,false);
         }
         $('.loader-container').css('display','none');
@@ -202,7 +228,7 @@ const duo = {
     $('.duo-container').html(htmlString);
   },
   writeTime: () => {
-    $('.time-left').text(` Competition ends ${moment(new Date('8/20/18 17:00').getTime()).fromNow()}!`);
+    $('.time-left').text(` Competition ends ${moment(new Date('9/28/18 17:00').getTime()).fromNow()}!`);
   }
 };
 
