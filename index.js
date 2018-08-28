@@ -16,7 +16,7 @@ const userInfo = [
   {
     'id': 407853977,
     'username': 'Bekah Stillwell',
-    'startingScore':10270
+    'startingScore':10310
   },
   {
     'id': 402249718,
@@ -153,6 +153,7 @@ const duo = {
                 .then(response => {
                   user.streak = response.streak;
                   user.learningLanguage = response.learningLanguage;
+                  user.points_data.total = ((user.streak / 100) * user.points_data.total) + user.points_data.total;
                   counter++;
                   if (counter === duo.users.length) {
                     return resolve();
