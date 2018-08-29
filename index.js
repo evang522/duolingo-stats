@@ -134,49 +134,51 @@ const duo = {
           duo.users.sort((a, b) => {
             return Number(a.points_data.total) < Number(b.points_data.total);
           });
-          duo.writeToDom(duo.users,false);
+          duo.writeToDom(duo.users,true);
         }
         $('.loader-container').css('display','none');
        
        
-        if (duo.call_count === 0) {
+        // if (duo.call_count === 0) {
 
-          return new Promise((resolve,reject) => {
-            let counter = 0;
+        return new Promise((resolve,reject) => {
+          let counter = 0;
 
-            duo.users.forEach(user => {
-              $.getJSON({
-                'url':`https://cors-anywhere.herokuapp.com/https://www.duolingo.com/2017-06-30/users/${user.id}?fields=name,streak,learningLanguage&_=1532406936067`,
-                'method':'GET',
-                'headers': {
-                  'x-requested-with':'friendface'
+          duo.users.forEach(user => {
+            $.getJSON({
+              'url':`https://cors-anywhere.herokuapp.com/https://www.duolingo.com/2017-06-30/users/${user.id}?fields=name,streak,learningLanguage&_=1532406936067`,
+              'method':'GET',
+              'headers': {
+                'x-requested-with':'friendface'
+              }
+            })
+              .then(response => {
+                user.streak = response.streak;
+                user.learningLanguage = response.learningLanguage;
+                user.points_data.total = ((user.streak / 100) * user.points_data.total) + user.points_data.total;
+                counter++;
+                if (counter === duo.users.length) {
+                  return resolve();
                 }
               })
-                .then(response => {
-                  user.streak = response.streak;
-                  user.learningLanguage = response.learningLanguage;
-                  user.points_data.total = ((user.streak / 100) * user.points_data.total) + user.points_data.total;
-                  counter++;
-                  if (counter === duo.users.length) {
-                    return resolve();
-                  }
-                })
-                .catch(err => {
-                  reject(err);
-                });
+              .catch(err => {
+                reject(err);
+              });
 
-            });
+          });
 
-          })
-            .then(() => {
-
+        })
+          .then(() => {
+            console.log(`Update ${duo.call_count} completed on ${new Date()}`);
             // Write HTML to DOM
-              duo.writeToDom(duo.users,false);
-              // Remove Loader
-              duo.call_count++;
-            });
-        }
+            duo.writeToDom(duo.users,false);
+            // Remove Loader
+            duo.call_count++;
+          });
+        // }
 
+        
+        
       })
       .catch(err => {
         console.log(err);
@@ -184,6 +186,7 @@ const duo = {
         $('.duo-container').html(duo.errorHtml);
         duo.call_count = 0;
       });
+
   },
 
   userBlockHtml: (name, points, avatar, streak='-', learningLanguage='-', index, username, loading, gains) => { 
