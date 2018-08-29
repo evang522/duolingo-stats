@@ -30,11 +30,11 @@
 
 body {
   font-family: 'Josefin Sans', sans-serif;
-  background-color: #78C726 !important;
+  background-color: rgb(171, 171, 171) !important;
 }
 
 header {
-  background-color:#2BA9E5;
+  background-color:rgb(229, 111, 43);
   padding:5px;
   padding-top:1px;
   padding-bottom:.5rem;
@@ -91,7 +91,7 @@ header {
 .leader {
   /* background-color:#FFC51D; */
   box-sizing:border-box;
-  border:7px solid #FFC51D;
+  border:7px solid rgb(255, 175, 90);
 
 }
 
