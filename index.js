@@ -156,6 +156,7 @@ const duo = {
                 user.streak = response.streak;
                 user.learningLanguage = response.learningLanguage;
                 user.points_data.total = ((user.streak / 100) * user.points_data.total) + user.points_data.total;
+                user.points_data.total = Number(user.points_data.total).toFixed(0);
                 counter++;
                 if (counter === duo.users.length) {
                   return resolve();
