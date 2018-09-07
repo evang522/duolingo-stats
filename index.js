@@ -98,7 +98,7 @@ const duo = {
         // Calculate Gains
         userData.forEach(user => {
           user.gains = duo.previousUserInfo && duo.previousUserInfo.find(prevUserRecord => prevUserRecord.id === user.id ) ? user.points_data.total - duo.previousUserInfo.find(item => item.id === user.id).points_data.total: '-';
-          user.gains = user.gains.toFixed(0);
+          user.gains = !isNaN(user.gains) ? user.gains.toFixed(0) : user.gains;
           user.gains < 0 ? user.gains = 0 : user.gains = user.gains;
         });
 
@@ -225,7 +225,7 @@ const duo = {
     </div>
     `; 
   },
-  errorHtml: '<div class=\'error-box\'> <h2> Error </h2> <h5><u> I had one job.</u> </h5> But really more likely the API isn\'t working. Sorry!  </p> <br> <button onclick="duo.fetchUserInfo()" class=\'retry-button btn btn-primary\'>Retry?</button></div>',
+  errorHtml: '<div class=\'error-box\'> <h2> Error </h2> <h5><u> Please try to reload the page.</u> </h5> And if that doesn\'t work, the API is probably down and you\'ll have to try again later. Sorry!  </p> <br> <button onclick="duo.fetchUserInfo()" class=\'retry-button btn btn-primary\'>Retry?</button></div>',
 
   writeToDom: (arrOfUsers,loading) => {
     let htmlString = '';
